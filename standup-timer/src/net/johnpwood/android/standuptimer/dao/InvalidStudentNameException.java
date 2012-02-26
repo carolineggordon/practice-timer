@@ -1,9 +1,9 @@
 package net.johnpwood.android.standuptimer.dao;
 
-public class InvalidTeamNameException extends RuntimeException {
+public class InvalidStudentNameException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public InvalidTeamNameException(String message) {
+    public InvalidStudentNameException(String message) {
         super(message);
     }
 }

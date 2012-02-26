@@ -6,9 +6,9 @@ import net.johnpwood.android.standuptimer.MeetingDetails;
 import net.johnpwood.android.standuptimer.R;
 import net.johnpwood.android.standuptimer.dao.DAOFactory;
 import net.johnpwood.android.standuptimer.dao.MeetingDAO;
-import net.johnpwood.android.standuptimer.dao.TeamDAO;
+import net.johnpwood.android.standuptimer.dao.StudentDAO;
 import net.johnpwood.android.standuptimer.model.Meeting;
-import net.johnpwood.android.standuptimer.model.Team;
+import net.johnpwood.android.standuptimer.model.Student;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +22,7 @@ import android.widget.TextView;
 public class MeetingDetailsTest extends ActivityInstrumentationTestCase2<MeetingDetails> {
     private MeetingDetails a = null;
     private MeetingDAO meetingDao = null;
-    private TeamDAO teamDao = null;
+    private StudentDAO studentDao = null;
     private Meeting meetingToDelete = null;
     private DAOFactory daoFactory = DAOFactory.getInstance();
 
@@ -38,26 +38,26 @@ public class MeetingDetailsTest extends ActivityInstrumentationTestCase2<Meeting
         createTestData();
 
         Intent intent = new Intent();
-        intent.putExtra("teamName", meetingToDelete.getTeam().getName());
+        intent.putExtra("studentName", meetingToDelete.getStudent().getName());
         intent.putExtra("meetingTime", meetingToDelete.getDescription());
         setActivityIntent(intent);
         a = getActivity();
 
         daoFactory.setGlobalContext(new RenamingDelegatingContext(a, "test_"));
         meetingDao = daoFactory.getMeetingDAO(a);
-        teamDao = daoFactory.getTeamDAO(a);
+        studentDao = daoFactory.getStudentDAO(a);
     }
 
     @Override
     protected void tearDown() throws Exception {
         meetingDao.deleteAll();
-        teamDao.deleteAll();
+        studentDao.deleteAll();
         super.tearDown();
     }
 
     @MediumTest
     public void test_stats_tab_should_show_stats_for_the_meeting() {
-        assertEquals("Test Team", ((TextView) a.findViewById(R.id.meeting_details_team_name)).getText());
+        assertEquals("Test Student", ((TextView) a.findViewById(R.id.meeting_details_student_name)).getText());
         assertEquals("01/07/2010 10:16:00am", ((TextView) a.findViewById(R.id.meeting_time)).getText());
         assertEquals("2", ((TextView) a.findViewById(R.id.number_of_participants)).getText());
         assertEquals("3:54", ((TextView) a.findViewById(R.id.individual_status_length)).getText());
@@ -74,7 +74,7 @@ public class MeetingDetailsTest extends ActivityInstrumentationTestCase2<Meeting
     }
 
     @MediumTest
-    public void test_deleting_a_team_can_be_aborted() {
+    public void test_deleting_a_student_can_be_aborted() {
         sendKeys(KeyEvent.KEYCODE_MENU, KeyEvent.KEYCODE_D);
         TouchUtils.clickView(this, a.getConfirmDeleteMeetingDialog().getButton(AlertDialog.BUTTON_NEGATIVE));
         assertNotNull(meetingDao.findById(meetingToDelete.getId()));
@@ -82,14 +82,14 @@ public class MeetingDetailsTest extends ActivityInstrumentationTestCase2<Meeting
 
     private void createTestData() {
         Context context = new RenamingDelegatingContext(getInstrumentation().getTargetContext(), "test_");
-        TeamDAO teamFixturesDao = daoFactory.getTeamDAO(context);
+        StudentDAO studentFixturesDao = daoFactory.getStudentDAO(context);
         MeetingDAO meetingFixturesDao = daoFactory.getMeetingDAO(context);
 
-        Team team = teamFixturesDao.save(new Team("Test Team"));
-        meetingFixturesDao.save(new Meeting(team, new GregorianCalendar(2010, 0, 5, 10, 15, 0).getTime(), 5, 301, 343, 30, 65));
-        meetingFixturesDao.save(new Meeting(team, new GregorianCalendar(2010, 0, 6, 10, 17, 0).getTime(), 8, 534, 550, 32, 120));
-        meetingToDelete = meetingFixturesDao.save(new Meeting(team, new GregorianCalendar(2010, 0, 7, 10, 16, 0).getTime(), 2, 234, 300, 23, 122));
-        meetingFixturesDao.save(new Meeting(team, new GregorianCalendar(2010, 0, 8, 10, 14, 0).getTime(), 3, 765, 765, 15, 78));
-        meetingFixturesDao.save(new Meeting(team, new GregorianCalendar(2010, 0, 9, 10, 12, 0).getTime(), 9, 444, 445, 10, 93));        
+        Student student = studentFixturesDao.save(new Student("Test Student"));
+        meetingFixturesDao.save(new Meeting(student, new GregorianCalendar(2010, 0, 5, 10, 15, 0).getTime(), 5, 301, 343, 30, 65));
+        meetingFixturesDao.save(new Meeting(student, new GregorianCalendar(2010, 0, 6, 10, 17, 0).getTime(), 8, 534, 550, 32, 120));
+        meetingToDelete = meetingFixturesDao.save(new Meeting(student, new GregorianCalendar(2010, 0, 7, 10, 16, 0).getTime(), 2, 234, 300, 23, 122));
+        meetingFixturesDao.save(new Meeting(student, new GregorianCalendar(2010, 0, 8, 10, 14, 0).getTime(), 3, 765, 765, 15, 78));
+        meetingFixturesDao.save(new Meeting(student, new GregorianCalendar(2010, 0, 9, 10, 12, 0).getTime(), 9, 444, 445, 10, 93));        
     }
 }

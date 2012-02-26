@@ -7,7 +7,7 @@ public class DAOFactory {
 
     private Context globalContext = null;
     private boolean cacheDAOInstances = false;
-    private TeamDAO cachedTeamDAO = null;
+    private StudentDAO cachedStudentDAO = null;
     private MeetingDAO cachedMeetingDAO = null;
 
     public static DAOFactory getInstance() {
@@ -20,14 +20,14 @@ public class DAOFactory {
     private DAOFactory() {
     }
 
-    public TeamDAO getTeamDAO(Context context) {
+    public StudentDAO getStudentDAO(Context context) {
         if (cacheDAOInstances) {
-            if (cachedTeamDAO == null) {
-                cachedTeamDAO = new TeamDAO(getProperDAOContext(context));
+            if (cachedStudentDAO == null) {
+                cachedStudentDAO = new StudentDAO(getProperDAOContext(context));
             }
-            return cachedTeamDAO;
+            return cachedStudentDAO;
         } else {
-            return new TeamDAO(getProperDAOContext(context));
+            return new StudentDAO(getProperDAOContext(context));
         }
     }
 

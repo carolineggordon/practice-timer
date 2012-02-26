@@ -8,7 +8,7 @@ import java.util.List;
 
 import net.johnpwood.android.standuptimer.model.Meeting;
 import net.johnpwood.android.standuptimer.model.MeetingStats;
-import net.johnpwood.android.standuptimer.model.Team;
+import net.johnpwood.android.standuptimer.model.Student;
 import net.johnpwood.android.standuptimer.utils.Logger;
 import net.johnpwood.android.standuptimer.utils.TimeFormatHelper;
 import android.app.AlertDialog;
@@ -31,23 +31,23 @@ import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class TeamDetails extends TabActivity {
+public class StudentDetails extends TabActivity {
     private static final int CONFIRM_DELETE_MEETING_DIALOG = 1;
-    private static final int CONFIRM_DELETE_TEAM_DIALOG = 2;
+    private static final int CONFIRM_DELETE_STUDENT_DIALOG = 2;
 
-    private Team team = null;
+    private Student student = null;
     private ListView meetingList = null;
     private Dialog confirmDeleteMeetingDialog = null;
-    private Dialog confirmDeleteTeamDialog = null;
+    private Dialog confirmDeleteStudentDialog = null;
     private Integer positionOfMeetingToDelete = null;
     private ArrayAdapter<String> meetingListAdapter = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.team_details);
+        setContentView(R.layout.student_details);
 
-        team = Team.findByName(getIntent().getStringExtra("teamName"), this);
+        student = Student.findByName(getIntent().getStringExtra("studentName"), this);
         meetingList = new ListView(this);
         meetingList.setOnItemClickListener(createMeetingListClickListener());
 
@@ -65,16 +65,16 @@ public class TeamDetails extends TabActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.team_details_options_menu, menu);
+        inflater.inflate(R.menu.student_details_options_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.delete_team_from_details:
-            Logger.d("Displaying the delete team dialog box");
-            showDialog(CONFIRM_DELETE_TEAM_DIALOG);
+        case R.id.delete_student_from_details:
+            Logger.d("Displaying the delete student dialog box");
+            showDialog(CONFIRM_DELETE_STUDENT_DIALOG);
             return true;
         default:
             Logger.e("Unknown menu item selected");
@@ -116,16 +116,16 @@ public class TeamDetails extends TabActivity {
             }
             return confirmDeleteMeetingDialog;
 
-        case CONFIRM_DELETE_TEAM_DIALOG:
-            if (confirmDeleteTeamDialog == null) {
+        case CONFIRM_DELETE_STUDENT_DIALOG:
+            if (confirmDeleteStudentDialog == null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Are you sure you want to delete this team?");
+                builder.setMessage("Are you sure you want to delete this student?");
                 builder.setCancelable(true);
-                builder.setPositiveButton("Yes", deleteTeamConfirmationListener());
+                builder.setPositiveButton("Yes", deleteStudentConfirmationListener());
                 builder.setNegativeButton("No", cancelListener());
-                confirmDeleteTeamDialog = builder.create();
+                confirmDeleteStudentDialog = builder.create();
             }
-            return confirmDeleteTeamDialog;
+            return confirmDeleteStudentDialog;
 
         default:
             Logger.e("Attempting to create an unkonwn dialog with an id of " + id);
@@ -138,8 +138,8 @@ public class TeamDetails extends TabActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String meetingTime = meetingListAdapter.getItem(position);
 
-                Intent intent = new Intent(TeamDetails.this, MeetingDetails.class);
-                intent.putExtra("teamName", team.getName());
+                Intent intent = new Intent(StudentDetails.this, MeetingDetails.class);
+                intent.putExtra("studentName", student.getName());
                 intent.putExtra("meetingTime", meetingTime);
                 startActivity(intent);
             }
@@ -151,14 +151,14 @@ public class TeamDetails extends TabActivity {
 
         tabHost.addTab(tabHost.newTabSpec("stats_tab").
                 setIndicator(this.getString(R.string.stats)).
-                setContent(createMeetingDetails(team)));
+                setContent(createMeetingDetails(student)));
 
         tabHost.addTab(tabHost.newTabSpec("meetings_tab").
                 setIndicator(this.getString(R.string.meetings)).
                 setContent(createMeetingList()));
 
         getTabHost().setCurrentTab(0);
-        findViewById(R.id.team_stats).bringToFront();
+        findViewById(R.id.student_stats).bringToFront();
     }
 
     private TabHost.TabContentFactory createMeetingList() {
@@ -171,11 +171,11 @@ public class TeamDetails extends TabActivity {
         };
     }
 
-    private TabHost.TabContentFactory createMeetingDetails(final Team team) {
+    private TabHost.TabContentFactory createMeetingDetails(final Student student) {
         return new TabHost.TabContentFactory() {
             public View createTabContent(String tag) {
                 setStatsTabContent();
-                return findViewById(R.id.team_stats);
+                return findViewById(R.id.student_stats);
             }
         };
     }
@@ -190,10 +190,10 @@ public class TeamDetails extends TabActivity {
         };
     }
 
-    protected DialogInterface.OnClickListener deleteTeamConfirmationListener() {
+    protected DialogInterface.OnClickListener deleteStudentConfirmationListener() {
         return new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                team.delete(TeamDetails.this);
+                student.delete(StudentDetails.this);
                 finish();
             }
         };
@@ -210,7 +210,7 @@ public class TeamDetails extends TabActivity {
     private void deleteMeeting(String dateString) {
         try {
             Date date = new SimpleDateFormat(Meeting.DESCRIPTION_FORMAT).parse(dateString);
-            Meeting meeting = Meeting.findByTeamAndDate(team, date, this);
+            Meeting meeting = Meeting.findByStudentAndDate(student, date, this);
             meeting.delete(this);
         } catch (ParseException e) {
             Logger.e(e.getMessage());
@@ -225,13 +225,13 @@ public class TeamDetails extends TabActivity {
     }
 
     private void setStatsTabContent() {
-        if (team != null && team.hasMeetings(this)) {
-            MeetingStats stats = team.getAverageMeetingStats(TeamDetails.this);
-            ((TextView) findViewById(R.id.meeting_team_name_label)).setText(getString(R.string.team_name));
-            ((TextView) findViewById(R.id.meeting_team_name)).setText(team.getName());
+        if (student != null && student.hasMeetings(this)) {
+            MeetingStats stats = student.getAverageMeetingStats(StudentDetails.this);
+            ((TextView) findViewById(R.id.meeting_student_name_label)).setText(getString(R.string.student_name));
+            ((TextView) findViewById(R.id.meeting_student_name)).setText(student.getName());
 
             ((TextView) findViewById(R.id.number_of_meetings_label)).setText(getString(R.string.number_of_meetings));
-            ((TextView) findViewById(R.id.number_of_meetings)).setText(Integer.toString((int) team.getNumberOfMeetings(TeamDetails.this)));
+            ((TextView) findViewById(R.id.number_of_meetings)).setText(Integer.toString((int) student.getNumberOfMeetings(StudentDetails.this)));
 
             ((TextView) findViewById(R.id.avg_number_of_participants_label)).setText(getString(R.string.avg_number_of_participants));
             ((TextView) findViewById(R.id.avg_number_of_participants)).setText(Float.toString(stats.getNumParticipants()));
@@ -248,8 +248,8 @@ public class TeamDetails extends TabActivity {
             ((TextView) findViewById(R.id.avg_longest_status_label)).setText(getString(R.string.avg_longest_status));
             ((TextView) findViewById(R.id.avg_longest_status)).setText(TimeFormatHelper.formatTime(stats.getLongestStatus()));
         } else {
-            ((TextView) findViewById(R.id.meeting_team_name_label)).setText(getString(R.string.no_meeting_stats));
-            ((TextView) findViewById(R.id.meeting_team_name)).setText("");
+            ((TextView) findViewById(R.id.meeting_student_name_label)).setText(getString(R.string.no_meeting_stats));
+            ((TextView) findViewById(R.id.meeting_student_name)).setText("");
 
             ((TextView) findViewById(R.id.number_of_meetings_label)).setText("");
             ((TextView) findViewById(R.id.number_of_meetings)).setText("");
@@ -273,19 +273,19 @@ public class TeamDetails extends TabActivity {
 
     private ArrayAdapter<String> createMeetingListAdapter() {
         List<String> meetingDescriptions = new ArrayList<String>();
-        if (team != null) {
-            List<Meeting> meetings = team.findAllMeetings(TeamDetails.this);
+        if (student != null) {
+            List<Meeting> meetings = student.findAllMeetings(StudentDetails.this);
             for (Meeting meeting : meetings) {
                 meetingDescriptions.add(meeting.getDescription());
             }
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(TeamDetails.this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(StudentDetails.this,
                 android.R.layout.simple_list_item_1, meetingDescriptions);
         return adapter;
     }
 
-    public AlertDialog getConfirmDeleteTeamDialog() {
-        return (AlertDialog) confirmDeleteTeamDialog;
+    public AlertDialog getConfirmDeleteStudentDialog() {
+        return (AlertDialog) confirmDeleteStudentDialog;
     }
 }

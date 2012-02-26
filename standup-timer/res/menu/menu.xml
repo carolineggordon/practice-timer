@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
    <item android:id="@+id/settings" android:title="@string/settings_label"
       android:icon="@android:drawable/ic_menu_preferences" android:alphabeticShortcut="s" />
-   <item android:id="@+id/teams" android:title="@string/team_label"
-      android:icon="@drawable/team" android:alphabeticShortcut="t" />
+   <item android:id="@+id/students" android:title="@string/student_label"
+      android:icon="@drawable/student" android:alphabeticShortcut="s" />
    <item android:id="@+id/about" android:title="@string/about_label"
       android:icon="@android:drawable/ic_menu_info_details" android:alphabeticShortcut="a" />
    <item android:id="@+id/help" android:title="@string/help_label"

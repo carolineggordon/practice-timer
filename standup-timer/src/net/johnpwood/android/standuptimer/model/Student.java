@@ -4,23 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.johnpwood.android.standuptimer.dao.DAOFactory;
-import net.johnpwood.android.standuptimer.dao.TeamDAO;
+import net.johnpwood.android.standuptimer.dao.StudentDAO;
 import net.johnpwood.android.standuptimer.utils.Logger;
 import android.content.Context;
 
-public class Team {
+public class Student {
     private Long id = null;
     private String name = null;
     private static DAOFactory daoFactory = DAOFactory.getInstance();
 
-    public Team(String name) {
+    public Student(String name) {
         if (name == null) {
-            throw new IllegalArgumentException("Team name must not be null");
+            throw new IllegalArgumentException("Student name must not be null");
         }
         this.name = name.trim();
     }
 
-    public Team(Long id, String name) {
+    public Student(Long id, String name) {
         this(name);
         this.id = id;
     }
@@ -34,10 +34,10 @@ public class Team {
     }
 
     public void delete(Context context) {
-        TeamDAO dao = null;
+        StudentDAO dao = null;
         try {
-            Meeting.deleteAllByTeam(this, context);
-            dao = daoFactory.getTeamDAO(context);
+            Meeting.deleteAllByStudent(this, context);
+            dao = daoFactory.getStudentDAO(context);
             dao.delete(this);
         } finally {
             if (dao != null) {
@@ -46,19 +46,19 @@ public class Team {
         }
     }
 
-    public static Team create(String name, Context context) {
-        TeamDAO dao = null;
-        Team team = null;
+    public static Student create(String name, Context context) {
+        StudentDAO dao = null;
+        Student student = null;
         try {
-            dao = daoFactory.getTeamDAO(context);
-            team = dao.save(new Team(name));
+            dao = daoFactory.getStudentDAO(context);
+            student = dao.save(new Student(name));
         } catch (Exception e) {
             Logger.e(e.getMessage());
         } finally {
             dao.close();
         }
 
-        return team;
+        return student;
     }
 
     public int getNumberOfMeetings(Context context) {
@@ -75,18 +75,18 @@ public class Team {
     }
 
     public List<Meeting> findAllMeetings(Context context) {
-        return Meeting.findAllByTeam(this, context);
+        return Meeting.findAllByStudent(this, context);
     }
 
     public boolean hasMeetings(Context context) {
         return findAllMeetings(context).size() > 0;
     }
 
-    public static Team findByName(String teamName, Context context) {
-        TeamDAO dao = null;
+    public static Student findByName(String studentName, Context context) {
+        StudentDAO dao = null;
         try {
-            dao = daoFactory.getTeamDAO(context);
-            return dao.findByName(teamName);
+            dao = daoFactory.getStudentDAO(context);
+            return dao.findByName(studentName);
         } finally {
             if (dao != null) {
                 dao.close();
@@ -94,11 +94,11 @@ public class Team {
         }
     }
 
-    public static List<String> findAllTeamNames(Context context) {
-        TeamDAO dao = null;
+    public static List<String> findAllStudentNames(Context context) {
+        StudentDAO dao = null;
         try {
-            dao = daoFactory.getTeamDAO(context);
-            return dao.findAllTeamNames();
+            dao = daoFactory.getStudentDAO(context);
+            return dao.findAllStudentNames();
         } finally {
             if (dao != null) {
                 dao.close();

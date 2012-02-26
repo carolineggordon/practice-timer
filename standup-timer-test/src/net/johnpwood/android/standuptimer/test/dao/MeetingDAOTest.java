@@ -6,7 +6,7 @@ import java.util.List;
 import net.johnpwood.android.standuptimer.dao.CannotUpdateMeetingException;
 import net.johnpwood.android.standuptimer.dao.MeetingDAO;
 import net.johnpwood.android.standuptimer.model.Meeting;
-import net.johnpwood.android.standuptimer.model.Team;
+import net.johnpwood.android.standuptimer.model.Student;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
 import android.test.suitebuilder.annotation.MediumTest;
@@ -28,12 +28,12 @@ public class MeetingDAOTest extends AndroidTestCase {
 
     @MediumTest
     public void test_create_a_meeting() {
-        Meeting meeting = new Meeting(new Team("Test Team"), new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), 5, 240, 300, 30, 120);
+        Meeting meeting = new Meeting(new Student("Test Student"), new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), 5, 240, 300, 30, 120);
         meeting = dao.save(meeting);
         
         assertNotNull(meeting.getId());
         meeting = dao.findById(meeting.getId());
-        assertEquals("Test Team", meeting.getTeam().getName());
+        assertEquals("Test Student", meeting.getStudent().getName());
         assertEquals(new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), meeting.getDateTime());
         assertEquals(5f, meeting.getMeetingStats().getNumParticipants());
         assertEquals(240.f, meeting.getMeetingStats().getIndividualStatusLength());
@@ -44,7 +44,7 @@ public class MeetingDAOTest extends AndroidTestCase {
 
     @MediumTest
     public void test_cannot_update_a_meeting_that_has_already_been_created() {
-        Meeting meeting = new Meeting(new Team("Test Team"), new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), 5, 240, 300, 30, 120);
+        Meeting meeting = new Meeting(new Student("Test Student"), new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), 5, 240, 300, 30, 120);
         meeting = dao.save(meeting);
 
         try {
@@ -56,15 +56,15 @@ public class MeetingDAOTest extends AndroidTestCase {
     }
 
     @MediumTest
-    public void test_find_all_meetings_by_team_in_cronological_order() {
-        Team team = new Team("Test Team");
-        dao.save(new Meeting(team, new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
-        dao.save(new Meeting(team, new GregorianCalendar(2010, 1, 4, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
-        dao.save(new Meeting(team, new GregorianCalendar(2010, 1, 7, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
-        dao.save(new Meeting(team, new GregorianCalendar(2010, 1, 1, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
-        dao.save(new Meeting(team, new GregorianCalendar(2010, 1, 2, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
+    public void test_find_all_meetings_by_student_in_cronological_order() {
+        Student student = new Student("Test Student");
+        dao.save(new Meeting(student, new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
+        dao.save(new Meeting(student, new GregorianCalendar(2010, 1, 4, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
+        dao.save(new Meeting(student, new GregorianCalendar(2010, 1, 7, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
+        dao.save(new Meeting(student, new GregorianCalendar(2010, 1, 1, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
+        dao.save(new Meeting(student, new GregorianCalendar(2010, 1, 2, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
 
-        List<Meeting> meetings = dao.findAllByTeam(team);
+        List<Meeting> meetings = dao.findAllByStudent(student);
         assertEquals(5, meetings.size());
         assertEquals(new GregorianCalendar(2010, 1, 7, 10, 15, 0).getTime(), meetings.get(0).getDateTime());
         assertEquals(new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), meetings.get(1).getDateTime());
@@ -75,7 +75,7 @@ public class MeetingDAOTest extends AndroidTestCase {
 
     @MediumTest
     public void test_delete_a_single_meeting() {
-        Meeting meeting = new Meeting(new Team("Test Team"), new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), 5, 240, 300, 30, 120);
+        Meeting meeting = new Meeting(new Student("Test Student"), new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), 5, 240, 300, 30, 120);
         meeting = dao.save(meeting);
         meeting = dao.findById(meeting.getId());
         assertNotNull(meeting.getId());
@@ -86,26 +86,26 @@ public class MeetingDAOTest extends AndroidTestCase {
     }
 
     @MediumTest
-    public void test_find_by_team_and_date() {
-        Team team = new Team("Test Team");
-        dao.save(new Meeting(team, new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
-        dao.save(new Meeting(team, new GregorianCalendar(2010, 1, 4, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
-        Meeting expected = dao.save(new Meeting(team, new GregorianCalendar(2010, 1, 7, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
-        dao.save(new Meeting(team, new GregorianCalendar(2010, 1, 1, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
-        dao.save(new Meeting(team, new GregorianCalendar(2010, 1, 2, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
+    public void test_find_by_student_and_date() {
+        Student student = new Student("Test Student");
+        dao.save(new Meeting(student, new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
+        dao.save(new Meeting(student, new GregorianCalendar(2010, 1, 4, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
+        Meeting expected = dao.save(new Meeting(student, new GregorianCalendar(2010, 1, 7, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
+        dao.save(new Meeting(student, new GregorianCalendar(2010, 1, 1, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
+        dao.save(new Meeting(student, new GregorianCalendar(2010, 1, 2, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
 
-        Meeting actual = dao.findByTeamAndDate(team, new GregorianCalendar(2010, 1, 7, 10, 15, 0).getTime());
+        Meeting actual = dao.findByStudentAndDate(student, new GregorianCalendar(2010, 1, 7, 10, 15, 0).getTime());
         assertEquals(expected.getId(), actual.getId());
     }
 
     @MediumTest
-    public void test_delete_all_by_team() {
-        Team team = new Team("Test Team");
-        dao.save(new Meeting(team, new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
-        dao.save(new Meeting(team, new GregorianCalendar(2010, 1, 4, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
+    public void test_delete_all_by_student() {
+        Student student = new Student("Test Student");
+        dao.save(new Meeting(student, new GregorianCalendar(2010, 1, 5, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
+        dao.save(new Meeting(student, new GregorianCalendar(2010, 1, 4, 10, 15, 0).getTime(), 5, 240, 300, 30, 120));
 
-        assertFalse(dao.findAllByTeam(team).isEmpty());
-        dao.deleteAllByTeam(team);
-        assertTrue(dao.findAllByTeam(team).isEmpty());
+        assertFalse(dao.findAllByStudent(student).isEmpty());
+        dao.deleteAllByStudent(student);
+        assertTrue(dao.findAllByStudent(student).isEmpty());
     }
 }

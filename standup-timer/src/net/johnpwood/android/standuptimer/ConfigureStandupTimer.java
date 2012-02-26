@@ -1,6 +1,6 @@
 package net.johnpwood.android.standuptimer;
 
-import net.johnpwood.android.standuptimer.model.Team;
+import net.johnpwood.android.standuptimer.model.Student;
 import net.johnpwood.android.standuptimer.utils.Logger;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,13 +27,13 @@ import android.widget.TextView;
 public class ConfigureStandupTimer extends Activity implements OnClickListener {
     private static final String MEETING_LENGTH = "meetingLength";
     private static final String NUMBER_OF_PARTICIPANTS = "numberOfParticipants";
-    private static final String TEAM_NAMES_POS = "teamNamesPos";
+    private static final String STUDENT_NAMES_POS = "studentNamesPos";
     private static final int MAX_ALLOWED_PARTICIPANTS = Integer.MAX_VALUE;
     private static final int MAX_ALLOWED_MEETING_LENGTH = Integer.MAX_VALUE;
 
     private int meetingLength = 0;
     private int numParticipants = 0;
-    private int teamNamesPos = 0;
+    private int studentNamesPos = 0;
 
     private Spinner meetingLengthSpinner = null;
     private EditText meetingLengthEditText = null;
@@ -73,9 +73,9 @@ public class ConfigureStandupTimer extends Activity implements OnClickListener {
             Logger.d("Displaying the settings");
             displaySettings();
             return true;
-        case R.id.teams:
-            Logger.d("Displaying the team configuration");
-            displayTeamConfiguration();
+        case R.id.students:
+            Logger.d("Displaying the student configuration");
+            displayStudentConfiguration();
             return true;
         default:
             Logger.e("Unknown menu item selected");
@@ -95,8 +95,8 @@ public class ConfigureStandupTimer extends Activity implements OnClickListener {
         startActivity(new Intent(this, Help.class));
     }
 
-    protected void displayTeamConfiguration() {
-        startActivity(new Intent(this, TeamList.class));
+    protected void displayStudentConfiguration() {
+        startActivity(new Intent(this, StudentList.class));
     }
 
     public void onClick(View v) {
@@ -109,9 +109,9 @@ public class ConfigureStandupTimer extends Activity implements OnClickListener {
         numParticipants = parseNumberOfParticipants(t);
         i.putExtra("numParticipants", numParticipants);
 
-        Spinner teamNameSpinner = (Spinner) findViewById(R.id.team_names);
-        teamNamesPos = teamNameSpinner.getSelectedItemPosition();
-        i.putExtra("teamName", (String) teamNameSpinner.getSelectedItem());
+        Spinner studentNameSpinner = (Spinner) findViewById(R.id.student_names);
+        studentNamesPos = studentNameSpinner.getSelectedItemPosition();
+        i.putExtra("studentName", (String) studentNameSpinner.getSelectedItem());
 
         if (numParticipants < 1 || (Prefs.allowUnlimitedParticipants(this) == false && numParticipants > 20)) {
             showInvalidNumberOfParticipantsDialog();
@@ -133,7 +133,7 @@ public class ConfigureStandupTimer extends Activity implements OnClickListener {
         loadState();
         initializeNumberOfParticipants();
         initializeMeetingLength();
-        initializeTeamNamesSpinner();
+        initializeStudentNamesSpinner();
         initializeStartButton();
     }
 
@@ -184,13 +184,13 @@ public class ConfigureStandupTimer extends Activity implements OnClickListener {
         return meetingLengthSpinner;
     }
 
-    private void initializeTeamNamesSpinner() {
-        Spinner s = (Spinner) findViewById(R.id.team_names);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Team.findAllTeamNames(this));
-        adapter.add(" [No Team] ");
+    private void initializeStudentNamesSpinner() {
+        Spinner s = (Spinner) findViewById(R.id.student_names);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Student.findAllStudentNames(this));
+        adapter.add(" [No Student] ");
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s.setAdapter(adapter);
-        s.setSelection(teamNamesPos);
+        s.setSelection(studentNamesPos);
     }
 
     private void initializeStartButton() {
@@ -201,11 +201,11 @@ public class ConfigureStandupTimer extends Activity implements OnClickListener {
     private void saveState() {
         Logger.i("Saving state.  mettingLength = " + meetingLength +
                 ", numParticipants = " + numParticipants +
-                ", teamNamePos = " + teamNamesPos);
+                ", studentNamePos = " + studentNamesPos);
         SharedPreferences.Editor preferences = getPreferences(MODE_PRIVATE).edit();
         preferences.putInt(MEETING_LENGTH, meetingLength);
         preferences.putInt(NUMBER_OF_PARTICIPANTS, numParticipants);
-        preferences.putInt(TEAM_NAMES_POS, teamNamesPos);
+        preferences.putInt(STUDENT_NAMES_POS, studentNamesPos);
         preferences.commit();
     }
 
@@ -213,10 +213,10 @@ public class ConfigureStandupTimer extends Activity implements OnClickListener {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         meetingLength = preferences.getInt(MEETING_LENGTH, 5);
         numParticipants = preferences.getInt(NUMBER_OF_PARTICIPANTS, 2);
-        teamNamesPos = preferences.getInt(TEAM_NAMES_POS, 0);
+        studentNamesPos = preferences.getInt(STUDENT_NAMES_POS, 0);
         Logger.i("Retrieved state.  mettingLengthPos = " + meetingLength +
                 ", numParticipants = " + numParticipants +
-                ", teamNamePos = " + teamNamesPos);
+                ", studentNamePos = " + studentNamesPos);
     }
 
     @Override
@@ -319,8 +319,8 @@ public class ConfigureStandupTimer extends Activity implements OnClickListener {
         return numParticipants;
     }
 
-    protected int getTeamNamesPos() {
-        return teamNamesPos;
+    protected int getStudentNamesPos() {
+        return studentNamesPos;
     }
 
     protected Spinner getMeetingLengthSpinner() {

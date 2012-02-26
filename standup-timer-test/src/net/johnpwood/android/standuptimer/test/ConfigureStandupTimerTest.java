@@ -87,7 +87,7 @@ public class ConfigureStandupTimerTest extends ActivityUnitTestCase<ConfigureSta
         t.setText("13");
         Spinner s = a.getMeetingLengthSpinner();
         s.setSelection(2);
-        Spinner s2 = (Spinner) a.findViewById(R.id.team_names);
+        Spinner s2 = (Spinner) a.findViewById(R.id.student_names);
         s2.setSelection(0);
 
         Button b = (Button) a.findViewById(R.id.start_button);
@@ -96,7 +96,7 @@ public class ConfigureStandupTimerTest extends ActivityUnitTestCase<ConfigureSta
         a.loadState();
         assertEquals(13, a.getNumParticipants());
         assertEquals(15, a.getMeetingLength());
-        assertEquals(0, a.getTeamNamesPos());
+        assertEquals(0, a.getStudentNamesPos());
     }
 
     @MediumTest
@@ -172,7 +172,7 @@ public class ConfigureStandupTimerTest extends ActivityUnitTestCase<ConfigureSta
         assertTrue(a.displayHelpDialogCalled());
         assertFalse(a.displaySettingsCalled());
         assertFalse(isFinishCalled());
-        assertFalse(a.displayTeamConfigurationCalled());
+        assertFalse(a.displayStudentConfigurationCalled());
         EasyMock.verify(menuItem);
     }
 
@@ -187,21 +187,21 @@ public class ConfigureStandupTimerTest extends ActivityUnitTestCase<ConfigureSta
         assertFalse(a.displayHelpDialogCalled());
         assertTrue(a.displaySettingsCalled());
         assertFalse(isFinishCalled());
-        assertFalse(a.displayTeamConfigurationCalled());
+        assertFalse(a.displayStudentConfigurationCalled());
         EasyMock.verify(menuItem);
     }
 
     @MediumTest
-    public void test_team_configuration_displayed_successfully() {
+    public void test_student_configuration_displayed_successfully() {
         MenuItem menuItem = EasyMock.createMock(MenuItem.class);
-        EasyMock.expect(menuItem.getItemId()).andReturn(R.id.teams);
+        EasyMock.expect(menuItem.getItemId()).andReturn(R.id.students);
 
         EasyMock.replay(menuItem);
         a.onOptionsItemSelected(menuItem);
         assertFalse(a.displayAboutBoxCalled());
         assertFalse(a.displaySettingsCalled());
         assertFalse(isFinishCalled());
-        assertTrue(a.displayTeamConfigurationCalled());
+        assertTrue(a.displayStudentConfigurationCalled());
         EasyMock.verify(menuItem);
     }
 }

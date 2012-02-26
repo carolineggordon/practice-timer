@@ -3,7 +3,7 @@ package net.johnpwood.android.standuptimer.mock;
 import android.content.SharedPreferences;
 import net.johnpwood.android.standuptimer.StandupTimer;
 import net.johnpwood.android.standuptimer.model.Meeting;
-import net.johnpwood.android.standuptimer.model.Team;
+import net.johnpwood.android.standuptimer.model.Student;
 
 public class StandupTimerMock extends StandupTimer {
     private boolean warningSoundPlayed = false;
@@ -56,13 +56,13 @@ public class StandupTimerMock extends StandupTimer {
     }
 
     @Override
-    public Team getTeam() {
-        return super.getTeam();
+    public Student getStudent() {
+        return super.getStudent();
     }
 
     @Override
-    public void setTeam(Team team) {
-        super.setTeam(team);
+    public void setStudent(Student Student) {
+        super.setStudent(Student);
     }
 
     @Override

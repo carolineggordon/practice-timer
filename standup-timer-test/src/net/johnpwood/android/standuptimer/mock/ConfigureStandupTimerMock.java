@@ -11,7 +11,7 @@ public class ConfigureStandupTimerMock extends ConfigureStandupTimer {
     private boolean displaySettingsCalled = false;
     private boolean displayAboutBoxCalled = false;
     private boolean displayHelpDialogCalled = false;
-    private boolean displayTeamConfigurationCalled = false;
+    private boolean displayStudentConfigurationCalled = false;
     private Intent intent = null;
 
     @Override
@@ -70,12 +70,12 @@ public class ConfigureStandupTimerMock extends ConfigureStandupTimer {
     }
 
     @Override
-    protected void displayTeamConfiguration() {
-        displayTeamConfigurationCalled = true;
+    protected void displayStudentConfiguration() {
+        displayStudentConfigurationCalled = true;
     }
 
-    public boolean displayTeamConfigurationCalled() {
-        return displayTeamConfigurationCalled;
+    public boolean displayStudentConfigurationCalled() {
+        return displayStudentConfigurationCalled;
     }
 
     @Override
@@ -94,8 +94,8 @@ public class ConfigureStandupTimerMock extends ConfigureStandupTimer {
     }
 
     @Override
-    public int getTeamNamesPos() {
-        return super.getTeamNamesPos();
+    public int getStudentNamesPos() {
+        return super.getStudentNamesPos();
     }
 
     @Override

@@ -26,14 +26,14 @@
          android:layout_marginLeft="100dp" android:layout_marginRight="100dp"
          android:gravity="center" />
 
-      <TextView android:text="@string/team"
+      <TextView android:text="@string/student"
          android:layout_width="wrap_content" android:layout_height="wrap_content"
          android:layout_gravity="center" android:paddingTop="20dp"
          android:textSize="17sp" />
 
-      <Spinner android:id="@+id/team_names"
+      <Spinner android:id="@+id/student_names"
          android:layout_width="fill_parent" android:layout_height="wrap_content"
-         android:prompt="@string/team"
+         android:prompt="@string/student"
          android:layout_marginTop="5dp" android:layout_marginLeft="70dp"
          android:layout_marginRight="70dp" />
 

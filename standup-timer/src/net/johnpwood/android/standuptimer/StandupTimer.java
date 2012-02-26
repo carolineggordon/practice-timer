@@ -5,7 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import net.johnpwood.android.standuptimer.model.Meeting;
-import net.johnpwood.android.standuptimer.model.Team;
+import net.johnpwood.android.standuptimer.model.Student;
 import net.johnpwood.android.standuptimer.utils.Logger;
 import net.johnpwood.android.standuptimer.utils.TimeFormatHelper;
 import android.app.Activity;
@@ -48,7 +48,7 @@ public class StandupTimer extends Activity implements OnClickListener {
     private Timer timer = null;
     private PowerManager.WakeLock wakeLock = null;
 
-    private Team team = null;
+    private Student student = null;
     private long meetingStartTime = 0;
     private long individualStatusStartTime = 0;
     private long individualStatusEndTime = 0;
@@ -77,9 +77,9 @@ public class StandupTimer extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timer);
 
-        team = Team.findByName(getIntent().getStringExtra("teamName"), this);
-        if (team != null) {
-            Logger.i("Starting new meeting for team '" + team.getName() + "'");
+        student = Student.findByName(getIntent().getStringExtra("studentName"), this);
+        if (student != null) {
+            Logger.i("Starting new meeting for student '" + student.getName() + "'");
         }
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -310,7 +310,7 @@ public class StandupTimer extends Activity implements OnClickListener {
         quickestStatus = preferences.getInt(QUICKEST_STATUS, Integer.MAX_VALUE);
         longestStatus = preferences.getInt(LONGEST_STATUS, 0);
 
-        team = Team.findByName(getIntent().getStringExtra("teamName"), this);
+        student = Student.findByName(getIntent().getStringExtra("studentName"), this);
         individualStatusStartTime = meetingStartTime;
     }
 
@@ -377,14 +377,14 @@ public class StandupTimer extends Activity implements OnClickListener {
     }
 
     private void storeMeetingStats() {
-        if (team != null) {
+        if (student != null) {
             long meetingEndTime = System.currentTimeMillis();
             if (individualStatusEndTime == 0) {
                 individualStatusEndTime = meetingEndTime;
             }
 
             try {
-                Meeting meeting = new Meeting(team, new Date(meetingStartTime), completedParticipants,
+                Meeting meeting = new Meeting(student, new Date(meetingStartTime), completedParticipants,
                         (int)((individualStatusEndTime - individualStatusStartTime) / 1000),
                         (int)((meetingEndTime - meetingStartTime) / 1000),
                         quickestStatus, longestStatus);
@@ -435,12 +435,12 @@ public class StandupTimer extends Activity implements OnClickListener {
         return wakeLock;
     }
 
-    protected synchronized Team getTeam() {
-        return team;
+    protected synchronized Student getStudent() {
+        return student;
     }
 
-    protected synchronized void setTeam(Team team) {
-        this.team = team;
+    protected synchronized void setStudent(Student student) {
+        this.student = student;
     }
 
     protected synchronized long getMeetingStartTime() {

@@ -1,9 +1,9 @@
 package net.johnpwood.android.standuptimer.dao;
 
-public class DuplicateTeamException extends RuntimeException {
+public class DuplicateStudentException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public DuplicateTeamException(String message) {
+    public DuplicateStudentException(String message) {
         super(message);
     }
 }

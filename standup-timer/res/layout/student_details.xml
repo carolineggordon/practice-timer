@@ -12,7 +12,7 @@
       <FrameLayout android:id="@android:id/tabcontent"
          android:layout_width="fill_parent" android:layout_height="fill_parent">
 
-         <ScrollView android:id="@+id/team_stats"
+         <ScrollView android:id="@+id/student_stats"
             android:layout_height="fill_parent" android:layout_width="fill_parent">
 
             <TableLayout android:layout_width="wrap_content"
@@ -20,10 +20,10 @@
                android:stretchColumns="1" android:padding="5dp">
 
                <TableRow>
-                  <TextView android:id="@+id/meeting_team_name_label"
+                  <TextView android:id="@+id/meeting_student_name_label"
                      android:layout_column="1" android:padding="3dp"
                      android:textSize="18sp" />
-                  <TextView android:id="@+id/meeting_team_name"
+                  <TextView android:id="@+id/meeting_student_name"
                      android:gravity="right" android:padding="3dp"
                      android:textSize="18sp" />
                </TableRow>
@@ -85,10 +85,10 @@
             </TableLayout>
          </ScrollView>
 
-         <TextView android:id="@+id/no_team_meetings" android:textSize="18sp"
+         <TextView android:id="@+id/no_student_meetings" android:textSize="18sp"
             android:layout_width="fill_parent" android:layout_height="fill_parent" />
 
-         <TextView android:id="@+id/no_team_meeting_stats" android:textSize="18sp"
+         <TextView android:id="@+id/no_student_meeting_stats" android:textSize="18sp"
             android:layout_width="fill_parent" android:layout_height="fill_parent" />
 
       </FrameLayout>

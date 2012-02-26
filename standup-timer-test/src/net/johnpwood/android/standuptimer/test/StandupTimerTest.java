@@ -3,7 +3,7 @@ package net.johnpwood.android.standuptimer.test;
 import net.johnpwood.android.standuptimer.Prefs;
 import net.johnpwood.android.standuptimer.R;
 import net.johnpwood.android.standuptimer.mock.StandupTimerMock;
-import net.johnpwood.android.standuptimer.model.Team;
+import net.johnpwood.android.standuptimer.model.Student;
 import android.content.Intent;
 import android.graphics.Color;
 import android.test.ActivityUnitTestCase;
@@ -28,7 +28,7 @@ public class StandupTimerTest extends ActivityUnitTestCase<StandupTimerMock> {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.putExtra("meetingLength", 5);
         intent.putExtra("numParticipants", 5);
-        intent.putExtra("teamName", "Test Team");
+        intent.putExtra("studentName", "Test Student");
         a = startActivity(intent, null, null);
     }
 
@@ -285,7 +285,7 @@ public class StandupTimerTest extends ActivityUnitTestCase<StandupTimerMock> {
         a.setIndividualStatusEndTime(System.currentTimeMillis());
         a.setQuickestStatus(60);
         a.setLongestStatus(120);
-        a.setTeam(new Team("Test team"));
+        a.setStudent(new Student("Test student"));
 
         clickFinishedButton();
         assertTrue(a.wasPersistMeetingCalled());
@@ -297,7 +297,7 @@ public class StandupTimerTest extends ActivityUnitTestCase<StandupTimerMock> {
         a.setCompletedParticipants(5);
         a.setQuickestStatus(60);
         a.setLongestStatus(120);
-        a.setTeam(new Team("Test team"));
+        a.setStudent(new Student("Test student"));
 
         clickFinishedButton();
         assertTrue(0L != a.getIndividualStatusEndTime());
@@ -305,8 +305,8 @@ public class StandupTimerTest extends ActivityUnitTestCase<StandupTimerMock> {
     }
 
     @MediumTest
-    public void test_finishing_a_meeting_with_no_team_specified_doesnt_try_to_persist_the_results() {
-        a.setTeam(null);
+    public void test_finishing_a_meeting_with_no_student_specified_doesnt_try_to_persist_the_results() {
+        a.setStudent(null);
         clickFinishedButton();
         assertFalse(a.wasPersistMeetingCalled());
     }

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import net.johnpwood.android.standuptimer.model.Meeting;
-import net.johnpwood.android.standuptimer.model.Team;
+import net.johnpwood.android.standuptimer.model.Student;
 import net.johnpwood.android.standuptimer.utils.Logger;
 import android.content.ContentValues;
 import android.content.Context;
@@ -51,13 +51,13 @@ public class MeetingDAO extends DAOHelper {
         return meeting;
     }
 
-    public List<Meeting> findAllByTeam(Team team) {
+    public List<Meeting> findAllByStudent(Student student) {
         List<Meeting> meetings = new ArrayList<Meeting>();
         Cursor cursor = null;
 
         try {
             SQLiteDatabase db = getReadableDatabase();
-            cursor = db.query(MEETINGS_TABLE_NAME, MEETINGS_ALL_COLUMS, MEETINGS_TEAM_NAME + " = ?", new String[]{team.getName()}, null, null, MEETINGS_MEETING_TIME);
+            cursor = db.query(MEETINGS_TABLE_NAME, MEETINGS_ALL_COLUMS, MEETINGS_STUDENT_NAME + " = ?", new String[]{student.getName()}, null, null, MEETINGS_MEETING_TIME);
             while (cursor.moveToNext()) {
                 meetings.add(createMeetingFromCursorData(cursor));
             }
@@ -70,7 +70,7 @@ public class MeetingDAO extends DAOHelper {
         return meetings;
     }
 
-    public Meeting findByTeamAndDate(Team team, Date date) {
+    public Meeting findByStudentAndDate(Student student, Date date) {
         Cursor cursor = null;
         Meeting meeting = null;
 
@@ -82,8 +82,8 @@ public class MeetingDAO extends DAOHelper {
 
             SQLiteDatabase db = getReadableDatabase();
             cursor = db.query(MEETINGS_TABLE_NAME, MEETINGS_ALL_COLUMS,
-                    MEETINGS_TEAM_NAME + " = ? and " + MEETINGS_MEETING_TIME + " >= ? and " + MEETINGS_MEETING_TIME + " < ?",
-                    new String[] {team.getName(), Long.toString(startTime), Long.toString(endTime)},
+                    MEETINGS_STUDENT_NAME + " = ? and " + MEETINGS_MEETING_TIME + " >= ? and " + MEETINGS_MEETING_TIME + " < ?",
+                    new String[] {student.getName(), Long.toString(startTime), Long.toString(endTime)},
                     null, null, null);
             if (cursor.getCount() == 1) {
                 if (cursor.moveToFirst()) {
@@ -103,14 +103,14 @@ public class MeetingDAO extends DAOHelper {
         db.delete(MEETINGS_TABLE_NAME, null, null);
     }
 
-    public void deleteAllByTeam(Team team) {
-        Logger.d("Deleting all meetings for team " + team.getName());
+    public void deleteAllByStudent(Student student) {
+        Logger.d("Deleting all meetings for student " + student.getName());
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(MEETINGS_TABLE_NAME, MEETINGS_TEAM_NAME + " = ?", new String[]{team.getName()});
+        db.delete(MEETINGS_TABLE_NAME, MEETINGS_STUDENT_NAME + " = ?", new String[]{student.getName()});
     }
 
     public void delete(Meeting meeting) {
-        Logger.d("Deleting meeting for " + meeting.getTeam().getName() + " with a date/time of '" + meeting.getDateTime() + "'");
+        Logger.d("Deleting meeting for " + meeting.getStudent().getName() + " with a date/time of '" + meeting.getDateTime() + "'");
         if (meeting.getId() != null) {
             SQLiteDatabase db = getWritableDatabase();
             db.delete(MEETINGS_TABLE_NAME, _ID + " = ?", new String[]{meeting.getId().toString()});
@@ -118,7 +118,7 @@ public class MeetingDAO extends DAOHelper {
     }
 
     private Meeting createNewMeeting(SQLiteDatabase db, Meeting meeting) {
-        Logger.d("Creating new meeting for " + meeting.getTeam().getName() + " with a date/time of '" + meeting.getDateTime() + "'");
+        Logger.d("Creating new meeting for " + meeting.getStudent().getName() + " with a date/time of '" + meeting.getDateTime() + "'");
         ContentValues values = createContentValues(meeting);
         long id = db.insertOrThrow(MEETINGS_TABLE_NAME, null, values);
         return new Meeting(id, meeting);
@@ -126,7 +126,7 @@ public class MeetingDAO extends DAOHelper {
 
     private ContentValues createContentValues(Meeting meeting) {
         ContentValues values = new ContentValues();
-        values.put(MEETINGS_TEAM_NAME, meeting.getTeam().getName());
+        values.put(MEETINGS_STUDENT_NAME, meeting.getStudent().getName());
         values.put(MEETINGS_MEETING_TIME, meeting.getDateTime().getTime());
         values.put(MEETINGS_NUM_PARTICIPANTS, meeting.getMeetingStats().getNumParticipants());
         values.put(MEETINGS_INDIVIDUAL_STATUS_LENGTH, meeting.getMeetingStats().getIndividualStatusLength());
@@ -138,14 +138,14 @@ public class MeetingDAO extends DAOHelper {
 
     private Meeting createMeetingFromCursorData(Cursor cursor) {
         long id = cursor.getLong(0);
-        String teamName = cursor.getString(1);
+        String studentName = cursor.getString(1);
         Date meetingTime = new Date(cursor.getLong(2));
         int numParticipants = cursor.getInt(3);
         int individualStatusLength = cursor.getInt(4);
         int meetingLength = cursor.getInt(5);
         int quickestStatus = cursor.getInt(6);
         int longestStatus = cursor.getInt(7);
-        return new Meeting(id, new Team(teamName), meetingTime, numParticipants, 
+        return new Meeting(id, new Student(studentName), meetingTime, numParticipants, 
                 individualStatusLength, meetingLength, quickestStatus, longestStatus);
     }
 }

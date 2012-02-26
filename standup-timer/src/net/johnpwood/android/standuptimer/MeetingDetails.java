@@ -6,7 +6,7 @@ import java.util.Date;
 
 import net.johnpwood.android.standuptimer.model.Meeting;
 import net.johnpwood.android.standuptimer.model.MeetingStats;
-import net.johnpwood.android.standuptimer.model.Team;
+import net.johnpwood.android.standuptimer.model.Student;
 import net.johnpwood.android.standuptimer.utils.Logger;
 import net.johnpwood.android.standuptimer.utils.TimeFormatHelper;
 import android.app.Activity;
@@ -30,10 +30,10 @@ public class MeetingDetails extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.meeting_details);
     
-        String teamName = getIntent().getStringExtra("teamName");
+        String studentName = getIntent().getStringExtra("studentName");
         String meetingTime = getIntent().getStringExtra("meetingTime");
 
-        Logger.i("Looking for meeting for '" + teamName + "' at '" + meetingTime + "'");
+        Logger.i("Looking for meeting for '" + studentName + "' at '" + meetingTime + "'");
 
         Date date = null;
         try {
@@ -44,9 +44,9 @@ public class MeetingDetails extends Activity {
             throw new RuntimeException(msg);
         }
 
-        Team team = Team.findByName(teamName, this);
-        meeting = Meeting.findByTeamAndDate(team, date, this);
-        displayMeetingStats(team, date);
+        Student student = Student.findByName(studentName, this);
+        meeting = Meeting.findByStudentAndDate(student, date, this);
+        displayMeetingStats(student, date);
     }
 
     @Override
@@ -107,10 +107,10 @@ public class MeetingDetails extends Activity {
         };
     }
 
-    private void displayMeetingStats(Team team, Date date) {
+    private void displayMeetingStats(Student student, Date date) {
         MeetingStats stats = meeting.getMeetingStats();
 
-        ((TextView) findViewById(R.id.meeting_details_team_name)).setText(team.getName());
+        ((TextView) findViewById(R.id.meeting_details_student_name)).setText(student.getName());
         ((TextView) findViewById(R.id.meeting_time)).setText(meeting.getDescription());
 
         ((TextView) findViewById(R.id.number_of_participants_label)).setText(getString(R.string.number_of_participants));

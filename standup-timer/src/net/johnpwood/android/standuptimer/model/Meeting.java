@@ -13,19 +13,19 @@ public class Meeting {
     public static String DESCRIPTION_FORMAT = "MM/dd/yyyy h:mm:ssaa";
 
     private Long id = null;
-    private Team team = null;
+    private Student student = null;
     private Date dateTime = null;
     private MeetingStats meetingStats = null;
 
     private static DAOFactory daoFactory = DAOFactory.getInstance();
 
-    public Meeting(Team team, Date dateTime, int numParticipants, int individualStatusLength,
+    public Meeting(Student student, Date dateTime, int numParticipants, int individualStatusLength,
             int meetingLength, int quickestStatus, int longestStatus) {
 
-        if (team == null) {
-            throw new IllegalArgumentException("Meeting team must not be null");
+        if (student == null) {
+            throw new IllegalArgumentException("Meeting student must not be null");
         } else {
-            this.team = new Team(team.getName());
+            this.student = new Student(student.getName());
         }
 
         if (dateTime == null) {
@@ -41,15 +41,15 @@ public class Meeting {
         meetingStats = new MeetingStats(numParticipants, individualStatusLength, meetingLength, quickestStatus, longestStatus);
     }
 
-    public Meeting(Long id, Team team, Date dateTime, int numParticipants, int individualStatusLength,
+    public Meeting(Long id, Student student, Date dateTime, int numParticipants, int individualStatusLength,
             int meetingLength, int quickestStatus, int longestStatus) {
-        this(team, dateTime, numParticipants, individualStatusLength, meetingLength, quickestStatus, longestStatus);
+        this(student, dateTime, numParticipants, individualStatusLength, meetingLength, quickestStatus, longestStatus);
         this.id = id;
     }
 
     public Meeting(Long id, Meeting meeting) {
         this.id = id;
-        this.team = new Team(meeting.getTeam().getName());
+        this.student = new Student(meeting.getStudent().getName());
         this.dateTime = meeting.dateTime;
         this.meetingStats = meeting.meetingStats;
     }
@@ -66,11 +66,11 @@ public class Meeting {
         }
     }
 
-    public static void deleteAllByTeam(Team team, Context context) {
+    public static void deleteAllByStudent(Student student, Context context) {
         MeetingDAO dao = null;
         try {
             dao = daoFactory.getMeetingDAO(context);
-            dao.deleteAllByTeam(team);
+            dao.deleteAllByStudent(student);
         } finally {
             if (dao != null) {
                 dao.close();
@@ -93,11 +93,11 @@ public class Meeting {
         return meeting;
     }
 
-    public static List<Meeting> findAllByTeam(Team team, Context context) {
+    public static List<Meeting> findAllByStudent(Student student, Context context) {
         MeetingDAO dao = null;
         try {
             dao = daoFactory.getMeetingDAO(context);
-            return dao.findAllByTeam(team);
+            return dao.findAllByStudent(student);
         } finally {
             if (dao != null) {
                 dao.close();
@@ -105,11 +105,11 @@ public class Meeting {
         }
     }
 
-    public static Meeting findByTeamAndDate(Team team, Date date, Context context) {
+    public static Meeting findByStudentAndDate(Student student, Date date, Context context) {
         MeetingDAO dao = null;
         try {
             dao = daoFactory.getMeetingDAO(context);
-            return dao.findByTeamAndDate(team, date);
+            return dao.findByStudentAndDate(student, date);
         } finally {
             if (dao != null) {
                 dao.close();
@@ -121,8 +121,8 @@ public class Meeting {
         return id;
     }
 
-    public Team getTeam() {
-        return team;
+    public Student getStudent() {
+        return student;
     }
 
     public Date getDateTime() {
