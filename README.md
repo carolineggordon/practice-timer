@@ -1,11 +1,12 @@
 ## Description
-Standup Timer is an [Android](http://www.android.com) application
-that acts as a simple, stand-up meeting stop watch.  It can be used to
-ensure your stand-up meeting finishes on time, and gives all the
-participants an equal share of time to state their progress.
+Practise Timer is an [Android](http://www.android.com) application
+that acts as a simple, music practice stop watch.  It can be used to
+record how long a number of students spend doing music practice.
 
-Standup Timer is free, open source, and available under the Apache V2 license.
-
+Practise Timer is free, open source, and available under the Apache V2 license.
+It is based on the Standup Timer created by John Wood, it is being modified step by 
+step to adapt to use for music practice.
+ 
 ## License
 Copyright 2011 John Wood
 
@@ -27,6 +28,11 @@ Sounds downloaded from [http://soundbible.com](http://soundbible.com), and modif
 - Bell sound (Attribution 3.0 license) courtesy of Mike Koenig
 
 ## Author
+Practise Timer:
+Caroline Gordon
+[carolinegordon531@gmail.com](mailto:carolinegordon531@gmail.com)
+
+Standup Timer:
 John Wood  
 [john@johnpwood.net](mailto:john@johnpwood.net)  
 [http://johnpwood.net/standup-timer](http://johnpwood.net/standup-timer)   
