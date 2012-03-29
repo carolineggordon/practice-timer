@@ -6,6 +6,16 @@ record how long a number of students spend doing music practice.
 Practise Timer is free, open source, and available under the Apache V2 license.
 It is based on the Standup Timer created by John Wood, it is being modified step by 
 step to adapt to use for music practice.
+
+There is a [trello board][https://trello.com/board/mylifeinmusic/4f325657407a2ddc71b30368] listing what needs to be 
+done. There are NO OTHER similar apps I have found anywhere, if you would like to collaborate on this project
+I would love to hear from you.
+Later I plan to add a web site which will back up your times and be a general resource to track
+your practice.
+I would like to add automatic recognition of the pieces you are playing and how often you play them, and to record some 
+snippets and upload those to the web site.
+If you play a piece particularly well you could hit a save button when you finish and get that uploaded.
+This is all to add later, right now just working on getting the standalone version working.
  
 ## License
 Copyright 2011 John Wood
